@@ -1,4 +1,4 @@
-### <center>php技术栈整理</center >
+### <center>php技术栈整理</center>
 
 - php
   - 基础语法
@@ -61,14 +61,14 @@
 	 - 缓存
 	 - 分布式优化
   - 数据管理与维护
-   - 数据备份
-    - mysqldump备份数据库
-    - mysldump备份数据表
-    - mysqldump备份数据表结构
-  - 数据恢复
-  - mysql日志
-  - mysql监控
-  - mysql常用工具
+	   - 数据备份
+			- mysqldump备份数据库
+			- mysldump备份数据表
+			- mysqldump备份数据表结构
+	   - 数据恢复
+	   - mysql日志
+	   - mysql监控
+	   - mysql常用工具
 
 - nginx
   - nginx简单介绍以及安装
