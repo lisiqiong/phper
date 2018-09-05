@@ -1,6 +1,4 @@
-# php技术栈整理
-
-****
+### <center>php技术栈整理</center >
 
 - php
   - 基础语法
@@ -9,28 +7,34 @@
   - 图片操作管理
   - 字符串操作
   - 面向对象
-  - 设计模式
-    - [单例模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/single)
-    - [观察者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/observer)
-    - [简单工厂模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82/factory)
-    - [建造者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F)
+  - [设计模式](https://github.com/lisiqiong/DesignPatterns)
+    - 单例模式
+    - 观察者模式
+    - 简单工厂模式
+    - 建造者模式
   - mvc
   - 框架
     - thinkphp
     - yaf
     - phalcon
-  - swoole
-    - [tcp](https://github.com/lisiqiong/swoole-demo/tree/master/tcpServer)
-    - [udp](https://github.com/lisiqiong/swoole-demo/tree/master/udpServer)
-    - [websocket](https://github.com/lisiqiong/swoole-demo/tree/master/websocket)
+  - [swoole](https://github.com/lisiqiong/swoole-demo)
+    - [tcp]
+    - [udp]
+    - [websocket]
     - 协程corutine
-    - [process](https://github.com/lisiqiong/swoole-demo/tree/master/process)
+    - [process]
     - memory
       - table
-    - [timer](https://github.com/lisiqiong/swoole-demo/tree/master/timer)
-  - 常用算法
- 
-***
+    - timer
+  - [常用算法](https://github.com/lisiqiong/arithmetic)
+	- [排序](https://github.com/lisiqiong/arithmetic/tree/master/sort)
+		- 递归
+		- 快速排序
+		- 冒泡排序
+		- 顺序查找
+		- 选择排序
+	- [查找](https://github.com/lisiqiong/arithmetic/tree/master/find)
+		- 二分法查找
 
 - mysql
   - 查询语句    
@@ -43,7 +47,7 @@
     - 应用系统sql优化
      - 分表策略
      - 分库策略
-	 - 索引
+     - 索引
 	  - 普通索引，联合索引
 	  - 如何选择字段创建索引
 	  - 索引失效原因 
@@ -56,48 +60,43 @@
 	 - 负载均衡
 	 - 缓存
 	 - 分布式优化
-- 数据管理与维护
- - 数据备份
-  - mysqldump备份数据库
-  - mysldump备份数据表
-  - mysqldump备份数据表结构
- - 数据恢复
- - mysql日志
- - mysql监控
- - mysql常用工具
- 
-***
+  - 数据管理与维护
+   - 数据备份
+    - mysqldump备份数据库
+    - mysldump备份数据表
+    - mysqldump备份数据表结构
+  - 数据恢复
+  - mysql日志
+  - mysql监控
+  - mysql常用工具
 
 - nginx
- - nginx简单介绍以及安装
- - nginx信号量
- - nginx虚拟主机的配置
- - location
- - rewrite重写
- - nginx结合php
- - expires缓存提升网站负载
- - nginx反向代理
- - nginx实现负载均衡
- - 大访问量的处理优化思路
- - nginx服务器集群搭建
+  - nginx简单介绍以及安装
+  - nginx信号量
+  - nginx虚拟主机的配置
+  - location
+  - rewrite重写
+  - nginx结合php
+  - expires缓存提升网站负载
+  - nginx反向代理
+  - nginx实现负载均衡
+  - 大访问量的处理优化思路
+  - nginx服务器集群搭建
  
-***
-
 - redis
  - 基础知识
-  - linux下相关操作命令
-  - 事务
-  - redis数据开发设计
+   - linux下相关操作命令
+   - 事务
+   - redis数据开发设计
  - 高可用
-  - 主从复制
-  - 集群分片
+   - 主从复制
+   - 集群分片
  - 运维监控
-  - 数据备份策略
-  - 常见reds错误分析
-  - 监控redis的服务状态
-  - 可视化管理工具
-  
-***  
+   - 数据备份策略
+   - 常见reds错误分析
+   - 监控redis的服务状态
+   - 可视化管理工具
+
 
 - linux
  - 待续
