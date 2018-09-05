@@ -3,32 +3,32 @@
 ****
 
 - php
- - 基础语法
- - 数组操作
- - 文件操作管理
- - 图片操作管理
- - 字符串操作
- - 面向对象
- - 设计模式
-   - [单例模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/single)
-   - [观察者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/observer)
-   - [简单工厂模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82/factory)
-   - [建造者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F)
- - mvc
- - 框架
-   - thinkphp
-   - yaf
-   - phalcon
- - swoole
-   - [tcp](https://github.com/lisiqiong/swoole-demo/tree/master/tcpServer)
-   - [udp](https://github.com/lisiqiong/swoole-demo/tree/master/udpServer)
-   - [websocket](https://github.com/lisiqiong/swoole-demo/tree/master/websocket)
-   - 协程corutine
-   - [process](https://github.com/lisiqiong/swoole-demo/tree/master/process)
-   - memory
-     - table
-   - [timer](https://github.com/lisiqiong/swoole-demo/tree/master/timer)
- - 常用算法
+  - 基础语法
+  - 数组操作
+  - 文件操作管理
+  - 图片操作管理
+  - 字符串操作
+  - 面向对象
+  - 设计模式
+    - [单例模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/single)
+    - [观察者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F/observer)
+    - [简单工厂模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E7%AE%80%E5%8D%95%E5%B7%A5%E5%8E%82/factory)
+    - [建造者模式](https://github.com/lisiqiong/DesignPatterns/tree/master/%E5%BB%BA%E9%80%A0%E8%80%85%E6%A8%A1%E5%BC%8F)
+  - mvc
+  - 框架
+    - thinkphp
+    - yaf
+    - phalcon
+  - swoole
+    - [tcp](https://github.com/lisiqiong/swoole-demo/tree/master/tcpServer)
+    - [udp](https://github.com/lisiqiong/swoole-demo/tree/master/udpServer)
+    - [websocket](https://github.com/lisiqiong/swoole-demo/tree/master/websocket)
+    - 协程corutine
+    - [process](https://github.com/lisiqiong/swoole-demo/tree/master/process)
+    - memory
+      - table
+    - [timer](https://github.com/lisiqiong/swoole-demo/tree/master/timer)
+  - 常用算法
  
 ***
 
