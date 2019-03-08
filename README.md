@@ -1,13 +1,13 @@
-### <center>php技术栈整理</center>
+### php技术栈整理
 
 - php
-  - 基础语法
+  - [基础语法](grammar.md)
   - 数组操作
   - 文件操作管理
   - 图片操作管理
   - 字符串操作
   - 面向对象
-  - [设计模式](https://github.com/lisiqiong/DesignPatterns)
+  - [设计模式](DesignPatterns)
     - 单例模式
     - 观察者模式
     - 简单工厂模式
@@ -44,7 +44,7 @@
     - 子查询
     - union
     - union all
-    - 触发器
+    - [触发器](./mysql/触发器.md)
     - 存储过程
   - 数据库优化
     - 应用系统sql优化
