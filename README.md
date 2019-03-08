@@ -1,7 +1,7 @@
 ### php技术栈整理
 
 - php
-  - [基础语法](grammar.md)
+  - 基础语法
   - 数组操作
   - 文件操作管理
   - 图片操作管理
@@ -27,16 +27,13 @@
     - memory
       - table
     - timer
-  - [常用算法](https://github.com/lisiqiong/arithmetic)
-	- [排序](https://github.com/lisiqiong/arithmetic/tree/master/sort)
-		- 递归
-		- 快速排序
-		- 冒泡排序
-		- 顺序查找
-		- 选择排序
-	- [查找](https://github.com/lisiqiong/arithmetic/tree/master/find)
-		- 二分法查找
-
+  - [常用算法](arithmetic.md)
+    * 递归
+    * 快速排序
+    * 冒泡排序  
+    * 选择排序
+    * 二分法查找
+    * 顺序查找
 - mysql
   - 基础知识    
     - 普通查询语句
