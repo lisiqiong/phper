@@ -37,13 +37,13 @@
       * [递归](arithmetic.md#递归)
       * [顺序查找](arithmetic.md#顺序查找)
     * 其它
-     * [乘法口诀](arithmetic.md#乘法口诀)
-     * [寻最小的n个数](arithmetic.md#寻最小的n个数)
-     * [寻相同元素](arithmetic.md#寻相同元素)
-     * [抽奖](arithmetic.md#抽奖)
-     * [数组反转](arithmetic.md#数组反转)
-     * [随机打乱数组](arithmetic.md#随机打乱数组)
-     * [寻找最小元素](arithmetic.md#寻找最小元素)
+      * [乘法口诀](arithmetic.md#乘法口诀)
+      * [寻最小的n个数](arithmetic.md#寻最小的n个数)
+      * [寻相同元素](arithmetic.md#寻相同元素)
+      * [抽奖](arithmetic.md#抽奖)
+      * [数组反转](arithmetic.md#数组反转)
+      * [随机打乱数组](arithmetic.md#随机打乱数组)
+      * [寻找最小元素](arithmetic.md#寻找最小元素)
 - mysql
   - 基础知识    
     - 普通查询语句
