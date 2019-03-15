@@ -16,6 +16,32 @@
  * [随机打乱数组](#随机打乱数组)
  * [寻找最小元素](#寻找最小元素)
 
+### 公共方法
+```
+//创建数据
+function createData($num) {
+    $arr = [];
+    for ($i = 0; $i < $num; $i++) {
+        $arr[$i] = rand($i, 1000);
+    }
+    return $arr;
+}
+
+//打印输出数组
+function printSortArr($fun, $num = 10) {
+    $data = createData($num);
+    $dataString = implode(',', $data);
+    echo "原数据:{$dataString}" . PHP_EOL;
+    $arr = $fun($data);
+    echo "算法[{$fun}]数据打印" . PHP_EOL;
+    foreach ($arr as $key => $value) {
+        # code...
+        echo $value . PHP_EOL;
+    }
+}
+
+```
+
 ### 冒泡排序
 ```
 <?php
@@ -26,21 +52,25 @@
  2.循环第二轮，不过需要注意的是这个时候元素已经变成了除去最大数之外的循环，循环同上
  3.依次类推最后依次将最大的拍到后面，所有循环结束，则数据就是从大到小的排序
  **/
-function bubble_sort(&$arr){
-    $len = count($arr);
-    for($i=0;$i<$len;$i++){
-        for($j=1;$j<$len-$i;$j++){
-            if($arr[$j-1]>$arr[$j]){
-                $temp = $arr[$j-1];
-                $arr[$j-1] = $arr[$j];
+
+//冒泡排序
+function mp_sort($arr) {
+    $count = count($arr);
+    for ($i = 0; $i < $count; $i++) {
+        for ($j = 1; $j < $count - $i; $j++) {
+            if ($arr[$j - 1] > $arr[$j]) {
+                $temp = $arr[$j - 1];
+                $arr[$j - 1] = $arr[$j];
                 $arr[$j] = $temp;
             }
         }
     }
+    return $arr;
 }
-$arr = [10,2,36,14,10,25,23,85,99,45];
-bubble_sort($arr);
-print_r($arr);
+
+
+
+printSortArr('mp_sort', 10);
 ```
 ### 快速排序 
 
@@ -77,6 +107,21 @@ function quickSort(&$arr){
 $arr = [2,78,3,23,532,13,67];
 print_r(quickSort($arr));
 
+```
+##### 输出结果
+```
+原数据:504,480,612,677,613,395,506,129,479,605
+算法[mp_sort]数据打印
+129
+395
+479
+480
+504
+506
+605
+612
+613
+677
 ```
 ### 选择排序 
 ```
