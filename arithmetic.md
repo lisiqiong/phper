@@ -134,37 +134,44 @@ print_r(quickSort($arr));
  *@desc 选择排序
  *原理：每一次从待排序的数据元素中选出最小（或最大）的一个元素，存放在序列的起始位置，知道全部待排序的数据元素排完。
  **/
-function selectSort($array)
-{
-    $count = count($array);
-    for($i=0;$i<$count-1;$i++){
+function xz_sort($arr) {
+    $len = count($arr);
+    for ($i = 0; $i < $len - 1; $i++) {
+        //每次找出最小的值的放到最前面，知道排序完
         $min = $i;
-        //找出最小值的索引
-        for($j=$i+1;$j<$count;$j++){
-            if($array[$min]>$array[$j]){
+        for ($j = $i + 1; $j < $len; $j++) {
+            if ($arr[$min] > $arr[$j]) {
                 $min = $j;
             }
         }
-        if($min!=$i){
-            //$temp = $array[$min];
-            //$array[$min] = $array[$i];
-            //$array[$i] = $temp;
-            $temp = $array[$i];
-            $array[$i] = $array[$min];
-            $array[$min] = $temp;
-
-        } 
-        
+        if ($min != $i) {
+            $temp = $arr[$min];
+            $arr[$min] = $arr[$i];
+            $arr[$i] = $temp;
+        }
     }
-    return $array;
+    return $arr;
 }
 
-$array = [10,56,12,36,8,9,11,23,451,253];
-
-$res = selectSort($array);
-print_r($res);
+printSortArr('xz_sort', 10);
 
 ```
+#### 运行结果
+```
+原数据:845,435,918,889,232,62,162,617,729,540
+算法[xz_sort]数据打印
+62
+162
+232
+435
+540
+617
+729
+845
+889
+918
+```
+
 ### 二分法查找 
 
 ```
