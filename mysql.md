@@ -1,4 +1,40 @@
-# mysql基础知识
+# mysql知识整理
+- 基础知识    
+  - 普通查询语句
+  - join
+  - 子查询
+  - union
+  - union all
+  - [触发器](#触发器)
+  - 存储过程
+- 数据库优化
+  - 应用系统sql优化
+    - 分表策略
+    - 分库策略
+    - 索引
+    - 普通索引，联合索引
+    - 如何选择字段创建索引
+    - 索引失效原因 
+    - 查询缓存
+  - mysql服务器优化
+    - 开启慢查询定位问题
+    - mysql连接数
+  - 操作系统与硬件优化
+  - 系统架构整体优化
+    - 负载均衡
+    - 缓存
+    - 分布式优化
+- 数据管理与维护
+  - 数据备份
+  - mysqldump备份数据库
+  - mysldump备份数据表
+  - mysqldump备份数据表结构
+  - 数据恢复
+  - mysql日志
+  - mysql监控
+    - mysql常用工具
+
+
 
 ## 触发器
 触发器的定义：触发器（TRIGGER）是MySQL的数据库对象之一，从5.0.2版本开始支持。该对象与编程语言中的函数非常类似，都需要声明、执行等。但是触发器的执行不是由程序调用，也不是由手工启动，而是由事件来触发、激活从而实现执行。
@@ -16,7 +52,7 @@ end
 
 这里触发器的有两种:before,after
 触发的事件类型为：update，insert，delete
-##### 创建两张表并插入一些数据演示下触发器的使用
+#### 创建两张表并插入一些数据演示下触发器的使用
 ```
 CREATE TABLE goods (
         id INT(11) UNSIGNED NOT NULL auto_increment,
@@ -51,7 +87,7 @@ UPDATE goods SET stock = stock-new.nums WHERE id=new.gid;
 END
 ```
 
-##### 运行创建触发器语句后显示触发器
+#### 运行创建触发器语句后显示触发器
 ```
 MySQL [test]> show triggers\G;
 *************************** 1. row ***************************
@@ -71,7 +107,7 @@ collation_connection: utf8_general_ci
 1 row in set (0.00 sec)
 ```
 
-##### 查询当前数据库商品表和订单表的数据
+#### 查询当前数据库商品表和订单表的数据
 ```
 MySQL [test]> select * from goods;
 +----+--------------+-------+
@@ -87,7 +123,7 @@ MySQL [test]> select * from goods;
 Empty set (0.00 sec)
 ```
 
-##### 向订单表中插入数据查看商品表库存是否自动减掉了
+#### 向订单表中插入数据查看商品表库存是否自动减掉了
 ```
 MySQL [test]> insert into goods_order (`gid`,`nums`) values (1,2);
 Query OK, 1 row affected (0.00 sec)
@@ -109,14 +145,14 @@ MySQL [test]> select * from goods_order;
 ```
 经过对照发现当添加一条商品，购买数量为2时商品表的库存数由50变为了48说明触发器运行成果，和我们所猜想的一致。
 
-##### 想订单表中插入超过库存总量的数据时测试效果
+#### 想订单表中插入超过库存总量的数据时测试效果
 ```
 MySQL [test]> insert into goods_order (`gid`,`nums`) values (2,32);
 ERROR 1690 (22003): BIGINT UNSIGNED value is out of range in '(`test`.`goods`.`stock` - NEW.nums)'
 
 插入超过库存数量的商品时sql报错，因为我们设置的字段是无符号的，如果当前字段是有符号此时，字段会更新为-2，这肯定是不符合我们要求的，此时需要修改t1触发器来，当超过库存总数量的时候我们减掉最大库存即可。
 ```
-##### 修改t1触发器
+#### 修改t1触发器
 ```
 DROP TRIGGER t1;
 CREATE TRIGGER t1
@@ -136,7 +172,7 @@ UPDATE goods SET stock = stock-new.nums WHERE id=new.gid;
 END
 ```
 
-##### 插入订单查看效果
+#### 插入订单查看效果
 ```
 MySQL [test]> select * from goods;
 +----+--------------+-------+
@@ -182,7 +218,7 @@ MySQL [test]> select * from goods_order;
 ```
 从上门可以看出，当我们订单中购买数量大于商品库存总数的时候，商品库存只会扣除最大库存数
 
-##### 创建触发t2，实现当删除订单表时恢复商品库存数量
+#### 创建触发t2，实现当删除订单表时恢复商品库存数量
 ```
 CREATE TRIGGER t2
 AFTER
@@ -262,10 +298,5 @@ MySQL [test]> select * from goods_order;
 ```
 由上门可以看出，删除id=1的数据后，订单表id=1的商品库存数由之前48增加到了50说明触发器成功执行
 
-##### 最后解释下FOR EACH ROW
+#### 最后解释下FOR EACH ROW
 for each row表示的是执行的触发起的动作影响了多少行数据就执行多少行的数据
-
-
-
-
-
