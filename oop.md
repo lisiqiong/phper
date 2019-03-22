@@ -1,4 +1,5 @@
 # php面相对象知识整理
+* [对象引用](#对象引用)
 * [访问控制private](#访问控制private)
 * [对象遍历](#对象遍历)
 
@@ -129,3 +130,74 @@ val3--value3
  **/
 ```
 
+## 对象引用
+#### 对象赋值
+```
+<?php
+/**
+@desc php5之后对象变量将不再保存整个对象的值，而只是保存一个标识符来访问真正的对象内容。
+当变量作为参数传递，作为结果返回都是保存着同一个标识符的拷贝。
+**/
+class Car
+{
+	public $brand;
+}
+$car1 = new Car();//$car1存的是对象的标识符
+$car2 = $car1;//$car1与$car2拥有同一个对象的标识符
+$car3 = new Car();
+var_dump($car1);
+var_dump($car2);
+var_dump($car3);
+$car2->brand = '宝马';
+$car1->brand = '奥迪';
+echo $car1->brand.PHP_EOL;
+echo $car2->brand.PHP_EOL;
+```
+结果为：
+```
+object(Car)#1 (1) {
+  ["brand"]=>
+  NULL
+}
+object(Car)#1 (1) {
+  ["brand"]=>
+  NULL
+}
+object(Car)#2 (1) {
+  ["brand"]=>
+  NULL
+}
+奥迪
+奥迪
+```
+> 赋值后发现对象都为#1标示，再重新创建一个对象实例变量对象标示变为了#2,同一个标示指向相同的信息修改会影响
+#### 赋值引用对象
+```
+<?php
+class Car
+{
+	public $brand;
+}
+$car1 = new Car();
+$car2 = &$car1;
+var_dump($car1);
+var_dump($car2);
+$car1->brand = '奥迪';
+echo $car2->brand.PHP_EOL;
+echo $car1->brand.PHP_EOL;
+
+```
+运行结果为：
+```
+object(Car)#1 (1) {
+  ["brand"]=>
+  NULL
+}
+object(Car)#1 (1) {
+  ["brand"]=>
+  NULL
+}
+奥迪
+奥迪
+```
+> 赋值引用对象都指向同一个对象地址，修改赋值相互有影响
