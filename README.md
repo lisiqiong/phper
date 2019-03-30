@@ -93,8 +93,8 @@
   - nginx结合php
   - nginx防盗链
   - expires缓存提升网站负载
-  - nginx反向代理
-  - nginx实现负载均衡
+  - [nginx反向代理](nginx.md#nginx方向代理)
+  - [nginx实现负载均衡](nginx.md#nginx实现负载均衡)
   - 大访问量的处理优化思路
   - nginx服务器集群搭建
 - redis
