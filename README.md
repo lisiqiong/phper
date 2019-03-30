@@ -10,6 +10,7 @@
    - 魔术方法 
    - [对象引用](oop.md#对象引用)
    - [访问控制](oop.md#访问控制private)
+   - [访问控制之继承](oop.md#访问控制之继承)
    - [对象遍历](oop.md#对象遍历)
  - [设计模式](DesignPatterns)
    - 单例模式
@@ -83,13 +84,14 @@
     - mysql日志
     - mysql监控
     - mysql常用工具
-- nginx
+- [nginx](nginx.md)
   - nginx简单介绍以及安装
-  - nginx信号量
+  - [nginx信号量](nginx.md#nginx信号量)
   - nginx虚拟主机的配置
   - location
   - rewrite重写
   - nginx结合php
+  - nginx防盗链
   - expires缓存提升网站负载
   - nginx反向代理
   - nginx实现负载均衡

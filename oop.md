@@ -1,8 +1,8 @@
 # php面相对象知识整理
 * [对象引用](#对象引用)
 * [访问控制private](#访问控制private)
+* [访问控制之继承](#访问控制之继承)
 * [对象遍历](#对象遍历)
-
 
 ## 访问控制private
 #### 私有属性内部调用
@@ -99,6 +99,48 @@ age设置后的值30
  **/
 
 ```
+
+## 访问控制之继承
+#### 继承类属性权限设置
+```
+<?php
+
+class Car{
+
+	private $price = "25w";
+	public $name  = '普通车';
+	protected $brand = '大众';
+
+	protected function getInfo(){
+		echo "name:".$this->name.',brand:'.$this->brand.',price:'.$this->price;
+	}
+
+}
+
+class Bm extends Car{
+
+	protected $price = "30w";
+	public $name = '普通车2';
+	protected $brand = "宝马";
+
+	public function __construct(){
+		$this->getInfo();
+	}
+
+	private function getInfo(){
+		echo "name:".$this->name.',brand:'.$this->brand.',price:'.$this->price;
+	}
+
+}
+
+$bm = new Bm();
+```
+#### 结果说明
+```
+Fatal error: Access level to Bm::getInfo() must be protected (as in class Car) or weaker in /Users/lidong/www/test/march/27/Car.php on line 29
+[Finished in 0.1s]
+```
+>总结:子类的属性和方法的访问控制权限应该跟父类保持一致或者更加宽松。
 
 ## 对象遍历
 ```
