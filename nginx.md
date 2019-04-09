@@ -1,6 +1,6 @@
 # nginx相关配置说明
 - [nginx信号量](#nginx信号量)
-- nginx虚拟主机配置
+- [location](#location)
 - [nginx方向代理](#nginx方向代理)
 - [nginx实现负载均衡](#nginx实现负载均衡)
 
@@ -125,6 +125,79 @@ kill -HUP `cat /usr/local/etc/nginx/nginx.pid`
 kill -USR2 `cat /usr/local/etc/nginx/nginx.pid`
 ```
 这个时候使用这个命令来平滑升级nginx服务器
+
+## location
+location有定位的意思，根据uri来进行不同的定位，在虚拟主机中是必不可少的，location可以网站的不同部分，定位到不同的处理方式上。
+* location匹配分类
+  * 精准匹配
+  * 一般匹配
+  * 正则匹配
+
+#### 精准匹配
+```
+location = /index.htm  {
+    root /var/www/html/;
+    index index.htm index.html;
+}
+
+location = /index.htm  {
+    root html/;
+    index index.htm index.html;
+}
+```
+
+```
+精准匹配的优先级要优于一般匹配，所以重启nginx后会打开/var/www/html下面的index.htm而不会打开html下的index.htm
+```
+
+#### 一般匹配
+```
+location / {
+    root /usr/local/nginx/html;
+    index index.htm index.html;
+}
+
+location /apis {
+    root /var/www/html;
+    index index.html;
+}
+```
+
+```
+我们访问http://localhost/apis/
+对于uri的/apis,两个location的pattern都可以匹配它们
+即‘/’能够左前缀匹配，"/apis"也能够左前缀匹配
+但此时最终访问的是目录/var/www/html下的文件
+因为apis/匹配的更长，因此使用该目录下的文件
+```
+
+#### 正则匹配
+```
+location / {
+    root /usr/local/nginx/html;
+    index index.html index.htm;
+}
+
+location ~ image {
+    root /var/www/;
+    index index.html;
+}
+
+```
+
+```
+如果我们访问，http://localhost/image/logo.png
+此时"/"与 location /匹配成功
+此时"image"正则与"image/logo.png"也匹配成功？谁发挥作用呢？
+正则表达式的成果将会使用，会覆盖前面的匹配
+图片会真正的返回/var/www/image/logo.png
+```
+### 总结
+* 1.先判断精准命中，如果命中立即返回结果并结束解析过程
+* 2.判断普通命中，如果有多个命中，记录下来最长的命中结果，（记录但不结束，最长的为准确）
+* 3.继续判断正则表达式的解析结果，按配置里的正则表达式顺序为准，由上到下开始匹配，一旦匹配成功一个，立即返回结果，并结束解析过程。
+* 4.普通命中顺序无所谓，按照命中的长短来确定
+* 5.正则命中有所谓，从前往后匹配命中
 
 ## nginx方向代理
 跨域：浏览器从一个域名的网页去请求另一个域名的资源时，域名、端口、协议任一不同，都是跨域 。

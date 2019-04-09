@@ -87,8 +87,7 @@
 - [nginx](nginx.md)
   - nginx简单介绍以及安装
   - [nginx信号量](nginx.md#nginx信号量)
-  - nginx虚拟主机的配置
-  - location
+  - [location](nginx.md#location)
   - rewrite重写
   - nginx结合php
   - nginx防盗链
