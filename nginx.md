@@ -1,7 +1,8 @@
 # nginx相关配置说明
 - [nginx信号量](#nginx信号量)
 - [location](#location)
-- [nginx方向代理](#nginx方向代理)
+- [rewrite重写](#rewrite重写)
+- [nginx反向代理](#nginx反向代理)
 - [nginx实现负载均衡](#nginx实现负载均衡)
 
 ## nginx信号量
@@ -199,7 +200,27 @@ location ~ image {
 * 4.普通命中顺序无所谓，按照命中的长短来确定
 * 5.正则命中有所谓，从前往后匹配命中
 
-## nginx方向代理
+## rewrite重写
+```
+if ($remote_addr=192.168.0.200){
+    return 403;
+}
+
+if($http_user_agent ~ MSIE){
+    rewrite ^.*$ /ie.html;
+    break;
+}
+
+if(!-e $document_root$fastcgi_script_name){
+    return ^.*$ /404.html  break;
+}
+
+
+
+```
+
+
+## nginx反向代理
 跨域：浏览器从一个域名的网页去请求另一个域名的资源时，域名、端口、协议任一不同，都是跨域 。
 
 下表格为前后端分离的域名，技术信息：

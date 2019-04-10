@@ -3,6 +3,7 @@
  - 基础语法
    * [运算符](grammar.md#运算符) 
  - 数组操作
+  * 数组指针
  - 文件操作管理
  - 图片操作管理
  - 字符串操作
@@ -49,6 +50,13 @@
       * [数组反转](arithmetic.md#数组反转)
       * [随机打乱数组](arithmetic.md#随机打乱数组)
       * [寻找最小元素](arithmetic.md#寻找最小元素)
+- http协议
+  * [http协议说明](http.md#http协议说明)
+  * 无状态
+  * http状态码
+  * telnet实现get请求
+  * telnet实现post请求
+  * telnet实现文件上传
 - mysql
   - 基础知识    
     - 普通查询语句
@@ -88,15 +96,16 @@
   - nginx简单介绍以及安装
   - [nginx信号量](nginx.md#nginx信号量)
   - [location](nginx.md#location)
-  - rewrite重写
+  - [rewrite重写](nginx.md#rewrite重写)
   - nginx结合php
   - nginx防盗链
   - expires缓存提升网站负载
-  - [nginx反向代理](nginx.md#nginx方向代理)
+  - [nginx反向代理](nginx.md#nginx反向代理)
   - [nginx实现负载均衡](nginx.md#nginx实现负载均衡)
   - 大访问量的处理优化思路
   - nginx服务器集群搭建
 - redis
+  - 用户积分排行榜
   - 事务
   - redis数据开发设计
   - 主从复制
@@ -108,5 +117,9 @@
   - [redis防止商品超发](redis.md#redis防止商品超发) 
   - redis持久化
 - linux
- - 待续
+  * 实现无密码登录
+  * shell脚本实现代码发布
+  * shell脚本实现服务监控
+  * shell脚本实现日志定时备份
+  * shell脚本实现数据库备份
 
