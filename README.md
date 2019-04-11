@@ -14,11 +14,11 @@
    - [访问控制之继承](oop.md#访问控制之继承)
    - [对象遍历](oop.md#对象遍历)
  - [设计模式](DesignPatterns)
-   - 单例模式
-   - 观察者模式
-   - 简单工厂模式
-   - 建造者模式
-   - 策略模式
+   - [单例模式](designPatterns.md#单例模式)
+   - [观察者模式](designPatterns.md#观察者模式)
+   - [简单工厂模式](designPatterns.md#简单工厂模式)
+   - [建造者模式](designPatterns.md#建造者模式)
+   - [策略模式](designPatterns.md#策略模式)
  - mvc
   - 框架
     - thinkphp
