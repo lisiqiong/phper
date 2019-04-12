@@ -1,4 +1,4 @@
-### phper技术栈整理
+### phper技术栈超全整理
 - php
  - 基础语法
    * [运算符](grammar.md#运算符) 
@@ -15,41 +15,44 @@
    - [对象遍历](oop.md#对象遍历)
  - [设计模式](DesignPatterns)
    - [单例模式](designPatterns.md#单例模式)
-   - [观察者模式](designPatterns.md#观察者模式)
    - [简单工厂模式](designPatterns.md#简单工厂模式)
+   - [观察者模式](designPatterns.md#观察者模式)
    - [建造者模式](designPatterns.md#建造者模式)
    - [策略模式](designPatterns.md#策略模式)
- - mvc
-  - 框架
-    - thinkphp
-    - yaf
-    - phalcon
-  - [swoole](https://github.com/lisiqiong/swoole-demo)
-    - [tcp]
-    - [udp]
-    - [websocket]
-    - 协程corutine
-    - [process]
-    - memory
-      - table
-    - timer
-  - [常用算法](arithmetic.md)
-    * 排序
-      * [冒泡排序](arithmetic.md#冒泡排序)
-      * [快速排序](arithmetic.md#快速排序)
-      * [选择排序](arithmetic.md#选择排序)
-    * 查找
-      * [二分法查找](arithmetic.md#二分法查找)
-      * [递归](arithmetic.md#递归)
-      * [顺序查找](arithmetic.md#顺序查找)
-    * 其它
-      * [乘法口诀](arithmetic.md#乘法口诀)
-      * [寻最小的n个数](arithmetic.md#寻最小的n个数)
-      * [寻相同元素](arithmetic.md#寻相同元素)
-      * [抽奖](arithmetic.md#抽奖)
-      * [数组反转](arithmetic.md#数组反转)
-      * [随机打乱数组](arithmetic.md#随机打乱数组)
-      * [寻找最小元素](arithmetic.md#寻找最小元素)
+   - [责任链模式](designPatterns.md#责任链模式)
+   - [对象映射模式](designPatterns.md#对象映射模式)
+- php高级
+  * php反射
+  * PHP中间件
+  * jwt自定义实现
+  * jwt规范实现
+  * php7新特性
+* [swoole](https://github.com/lisiqiong/swoole-demo)
+  * [tcp]
+  * [udp]
+  * [websocket]
+  * 协程corutine
+  * [process]
+  * memory
+    * table
+  * timer
+* [常用算法](arithmetic.md)
+  + 排序
+    + [冒泡排序](arithmetic.md#冒泡排序)
+    + [快速排序](arithmetic.md#快速排序)
+    + [选择排序](arithmetic.md#选择排序)
+  + 查找
+    + [二分法查找](arithmetic.md#二分法查找)
+    + [递归](arithmetic.md#递归)
+    + [顺序查找](arithmetic.md#顺序查找)
+  + 其它
+    + [乘法口诀](arithmetic.md#乘法口诀)
+    + [寻最小的n个数](arithmetic.md#寻最小的n个数)
+    + [寻相同元素](arithmetic.md#寻相同元素)
+    + [抽奖](arithmetic.md#抽奖)
+    + [数组反转](arithmetic.md#数组反转)
+    + [随机打乱数组](arithmetic.md#随机打乱数组)
+    + [寻找最小元素](arithmetic.md#寻找最小元素)
 - http协议
   * [http协议说明](http.md#http协议说明)
   * 无状态
