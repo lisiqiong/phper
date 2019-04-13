@@ -88,8 +88,6 @@ $db4 = Db::getInstance();
 echo $db4->getInfo();
 var_dump($db4);
 
-
-
 ```
 #### 运行结果
 
@@ -233,6 +231,10 @@ sqlite connect ok
 #### 实现方式
 需要实现两个角色，观察者和被观察者对象。当被观察者发生改变的时候观察者观察者就会观察到这样的变化。
 
+#### 角色分析
+1. 观察者，观察变化的对象，以及观察者接收的通知处理实现。
+2. 被观察者，添加观察者，删除观察者，通知观察者。
+
 ```
 <?php
 
@@ -323,6 +325,260 @@ $obj->trgger('《php之设计模式》','2月19日下午2点');
 ```
 #### 总结
 该例子使用观察者模式，来实现当一个类的两个变量发生改变时，依赖它的对象会全部收到通知，并自动更新为当前的所传递的值的所属信息.
+
+## 建造者模式
+---
+### 角色分析
+以汽车为例子，建造者模式应该如下四个角色:
+1. Product：产品角色,可以理解为行业规范，具体到一辆汽车的具有的功能和属性需要具体的建造者去完成，也就是汽车品牌公司去完成。
+2. Builder:抽象的建造者角色,行业规范有了，具体建造者的抽象，将让构造者来具体需要实现的属性和功能抽象化，让各个品牌来实现。
+3. ConcreateBuilder：具体建造者角色，具体的汽车品牌根据抽象的定义来实现汽车的属性和功能同时调用产品的具体构造一辆车。
+4. Director：导演者角色，它是指挥者，指挥具体实例化那个建造者角色来驱动生成一辆真正的自己品牌的车。
+---
+```
+<?php
+
+/**
+*@desc 产品类
+定义car的具体属性和功能
+**/
+class Car{
+
+    public $_brand;//品牌
+    public $_model;//型号
+    public $_type;//类型，是小汽车还是suv
+    public $_price;//价格
+
+    //输出车的功能信息
+    public function getCarInfo(){
+        return "恭喜您拥有了一辆，".$this->_brand.'的'.$this->_model.$this->_type."靓车，此车目前售价".$this->_price."w元";
+    }
+
+}
+
+/**
+*@desc 抽象的建造者类
+**/
+abstract class Builder{
+    public $_car;//产品的对象
+    public $_info=[];//参数信息
+    public function __construct(array $info){
+        $this->_car = new Car();
+        $this->_info = $info;
+    }
+
+    abstract function buildBrand();
+
+    abstract function buildModel();
+
+    abstract function buildType();
+
+    abstract function buildPrice();
+
+    abstract function getCar();
+
+}
+
+/**
+*@desc 具体的宝马车构造
+**/
+class BmwCar extends Builder{
+
+    public function buildBrand(){
+        $this->_car->_brand =  $this->_info['brand'];
+    }
+
+    public function buildModel(){
+        $this->_car->_model =  $this->_info['model'];
+    }
+
+    public function buildType(){
+        $this->_car->_type =  $this->_info['type'];
+    }
+
+    public function buildPrice(){
+        $this->_car->_price =  $this->_info['price'];
+    }
+
+    /**
+    *@desc 获取整个车的对象标示，让指挥者操作创建具体车
+    **/
+    public function getCar(){
+        return $this->_car;
+    }
+
+}
+
+
+/**
+*@desc 具体的奥迪车构造
+**/
+class AudiCar extends Builder{
+
+    public function buildBrand(){
+        $this->_car->_brand =  $this->_info['brand'];
+    }
+
+    public function buildModel(){
+        $this->_car->_model =  $this->_info['model'];
+    }
+
+    public function buildType(){
+        $this->_car->_type =  $this->_info['type'];
+    }
+
+    public function buildPrice(){
+        $this->_car->_price =  $this->_info['price'];
+    }
+
+
+    /**
+    *@desc 获取整个车的对象标示，让指挥者操作创建具体车
+    **/
+    public function getCar(){
+        return $this->_car;
+    }
+
+}
+
+
+/***
+*@desc 创建指挥者,指挥者调用具体的车的构造创建一辆真正的车
+**/
+class Director{
+    public $_builder;//构造者对戏那个
+    public function __construct($builder){
+        $this->_builder = $builder;
+    }
+
+    //指挥方法，指挥生成一辆车
+    public function Contruct(){
+        $this->_builder->buildBrand();
+        $this->_builder->buildModel();
+        $this->_builder->buildType();
+        $this->_builder->buildPrice();
+        return $this->_builder->getCar();
+    }
+
+}
+
+//创建一辆宝马车
+$info = ['brand'=>'宝马','model'=>'525','type'=>'轿车','price'=>'50'];
+$director = new Director(new BmwCar($info));
+echo $director->Contruct()->getCarInfo();
+
+echo PHP_EOL;
+
+
+//创建一辆奥迪车
+$info = ['brand'=>'奥迪','model'=>'Q5','type'=>'suv','price'=>'51'];
+$director = new Director(new AudiCar($info));
+echo $director->Contruct()->getCarInfo();
+```
+
+#### 运行结果
+```
+恭喜您拥有了一辆，宝马的525轿车靓车，此车目前售价50w元
+恭喜您拥有了一辆，奥迪的Q5suv靓车，此车目前售价51w元
+```
+
+## 策略模式
+---
+#### 定义
+在软件编程中可以理解为定义一系列算法，将一个个算法封装起来，也可以理解为一系列的处理方式，根据不同的场景使用对应的算法策略的一种设计模式。
+
+#### 小故事
+三国时期，刘备要去东吴，诸葛亮担心主公刘备出岔子，特意准备了三个锦囊，让赵云在适当时机打开锦囊，按其中方式处理，这三个锦囊妙计如下：
+1. 第一个锦囊妙计：借孙权之母、周瑜之丈人以助刘备，终于弄假成真，使刘备得续佳偶。
+2. 第二个锦囊妙计：周瑜的真美人计，又被诸葛亮的第二个锦囊计破了，它以荆州危急，借得孙夫人出头，向国太谎说要往江边祭祖，乃得以逃出东吴。尽管周瑜早为防备，孙权派人追捕。
+3. 第三个锦襄妙计：又借得孙夫人之助，喝退拦路之兵。
+
+#### 角色分析
+1. 抽象策略角色，抽象的处理方式，通常由一个接口或抽象类实现。
+2. 具体策略角色，具体的处理方式或者说是妙计。
+3. 环境角色，也就是条件。
+
+```
+<?php
+
+/**
+*@desc 抽象的锦囊包类，也叫抽象策略类
+**/
+abstract class Strategy{
+    abstract function Skill();
+}
+
+/**
+*@desc 具体策略类，第一条锦囊妙计
+**/
+class oneStrategy extends Strategy{
+    public function skill(){
+        echo "借孙权之母、周瑜之丈人以助刘备，终于弄假成真，使刘备得续佳偶";
+    }
+}
+
+
+/**
+*@desc 具体策略类，第二条锦囊妙计
+**/
+class twoStrategy extends Strategy{
+    public function skill(){
+        echo "以荆州危急，借得孙夫人";
+    }
+}
+
+/**
+*@desc 具体策略类，第三条锦囊妙计
+**/
+class threeStrategy extends Strategy{
+    public function skill(){
+        echo "借得孙夫人之助，喝退拦路之兵";
+    }
+}
+
+/**
+*@desc 环境角色类
+**/
+class Control{
+
+    private $_strategy;//存储策略类的对象
+    public function __construct($strategy){
+        $this->_strategy = $strategy;
+    }
+
+    //执行选择的锦囊妙计
+    public function skillBag(){
+        $this->_strategy->skill();
+    }
+
+}
+
+$type = 2;//选择第一个锦囊妙计
+switch ($type) {
+    case '1':
+        $obj = new Control(new oneStrategy());
+        break;
+    case 2:
+        $obj = new Control(new twoStrategy());
+        break;
+    case 3: 
+        $obj = new Control(new threeStrategy());
+        break;
+    default:
+        $obj = new Control(new oneStrategy());
+}
+$obj->skillBag();
+```
+
+#### 运行结果
+```
+以荆州危急，借得孙夫人
+```
+
+## 责任链模式
+---
+
+
 
 
 
