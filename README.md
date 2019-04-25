@@ -2,18 +2,17 @@
 - php
  - 基础语法
    * [运算符](grammar.md#运算符) 
- - 数组操作
-  * 数组指针
- - 文件操作管理
- - 图片操作管理
- - 字符串操作
+   * [数组指针](grammar.md#数组指针)
+   * 文件操作管理
+   * 图片操作
+   * 字符串操作
  - [面向对象](oop.md)
    - 魔术方法 
    - [对象引用](oop.md#对象引用)
    - [访问控制](oop.md#访问控制private)
    - [访问控制之继承](oop.md#访问控制之继承)
    - [对象遍历](oop.md#对象遍历)
- - [设计模式](DesignPatterns)
+ - [设计模式](designPatterns.md)
    - [单例模式](designPatterns.md#单例模式)
    - [简单工厂模式](designPatterns.md#简单工厂模式)
    - [观察者模式](designPatterns.md#观察者模式)
@@ -21,8 +20,11 @@
    - [策略模式](designPatterns.md#策略模式)
    - [责任链模式](designPatterns.md#责任链模式)
    - [对象映射模式](designPatterns.md#对象映射模式)
+   - [队列消息模式](designPatterns.md#队列消息模式)
 - php高级
-  * php反射
+  * php缓冲区
+  * [php自动加载](high-php.md#php自动加载)
+  * [php反射](high-php.md#php反射)
   * PHP中间件
   * jwt自定义实现
   * jwt规范实现
