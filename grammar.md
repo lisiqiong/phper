@@ -6,7 +6,7 @@
 + 字符串操作
 
 ## 数组指针
-### 介绍几个数组指针的函数
+### 1.介绍几个数组指针的函数
 - current() - 返回数组中的当前单元
 - end() - 将数组的内部指针指向最后一个单元
 - prev() - 将数组的内部指针倒回一位
@@ -47,7 +47,40 @@ echo "第一个元素".key($listArr).'=>'.current($listArr).PHP_EOL;
 第一个元素0=>1232
 ```
 
-#### 使用数组指针取出当前值的下一个值，环形取
+### 2.使用each循环数组
+```
+<?php
+$listArr = [
+    '1232','2456','7789','8976',
+    '5678','3456','2347','9876',
+    '3451','7744','2212','3214',
+];
+
+//使用each方法遍历数组
+
+reset($listArr);
+while(list($key,$value) = each($listArr)){
+    echo "key:{$key},value:{$value}".PHP_EOL;
+}
+```
+#### 输出结果
+```
+key:0,value:1232
+key:1,value:2456
+key:2,value:7789
+key:3,value:8976
+key:4,value:5678
+key:5,value:3456
+key:6,value:2347
+key:7,value:9876
+key:8,value:3451
+key:9,value:7744
+key:10,value:2212
+key:11,value:3214
+```
+
+
+### 3.使用数组指针取出当前值的下一个值，环形取
 ```
 <?php
 

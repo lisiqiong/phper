@@ -24,6 +24,7 @@
 + [策略模式](#策略模式)
 + [责任链模式](#责任链模式)
 + [对象映射模式](#对象映射模式)
++ [队列消息模式](#队列消息模式)
 
 ## 单例模式
 ---
@@ -577,6 +578,132 @@ $obj->skillBag();
 
 ## 责任链模式
 ---
+
+## 队列消息模式
+---
+### 在php框架中，启动框架时会去加载php框架生命周期中必须要运行的核心类，我们可以使用if来判断是否加载对应的类的先后，但是这种方式比较不容易维护。在这里我们来实现一个核心加载器，当框架运行的时候来驱动框架整个生命周期的核心类的调用。我们下面介绍使用php的队列消息模式的思想来实现PHP框架核心类加载。
+```
+<?php
+/*
+ * @desc 核心加载器
+ */
+class Core{
+    //需要加载对象数组
+    private static $_objlist=[];
+    //标示的调用方法为静态
+    const _STATIC=1;
+    //标示的方法为对象的
+    const _OBJECT=2;
+    //标示方法为静态的
+    const _SIGNLE=3;
+
+    /**
+     * @desc 在对象前添加对象
+     * @param $array
+     */
+    public static function unshiftObj($array){
+        array_unshift(self::$_objlist,$array);
+    }
+
+    /***
+     * @desc 监听对象个数用来遍历执行存储在数组的对象
+     * @return bool
+     */
+    public static function listen(){
+        if(count(self::$_objlist)>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * @desc 向对象末尾加入对象
+     * @param $array
+     */
+    public static function pushObj($array){
+        array_push(self::$_objlist,$array);
+    }
+
+    /**
+     * @desc 依次执行需要加载的对象
+     */
+    public static function doObj(){
+        //取出数组中的第一组数据
+        $objArr = array_shift(self::$_objlist);
+        //获取类名
+        $className = $objArr[0];
+        //获取方法名称
+        $funcNmae = $objArr[1];
+        //获取参数信息
+        $params = $objArr[2];
+        //获取调用类型，是静态直接调用，还是对象调用方法，还是单例模式的方法调用
+        $type = $objArr[3];
+        //使用call_user_func_array方法调用类对应的方法
+        if($type==self::_STATIC){
+            call_user_func_array([$className,$funcNmae],$params);
+        }elseif ($type==self::_OBJECT){
+            $obj = new $className();
+            call_user_func_array([$obj,$funcNmae],$params);
+        }elseif ($type==self::_SIGNLE){
+            $signleObj = $className::getInstance();
+            call_user_func_array([$signleObj,$funcNmae],$params);
+        }
+    }
+}
+
+class A{
+    public static function  init(){
+        echo "A类型调用静态方法init成功<br/>";
+    }
+}
+
+class B{
+    public  function add($name,$age=null){
+        echo "B类通过对象方法调用add方法成功,参数name:{$name} , age:{$age}<br/>";
+    }
+}
+
+class C{
+    private static $_instance;
+
+    private function __construct()
+    {
+    }
+
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
+    /**
+     * @desc 获取实例化对象的入口
+     */
+    public static function getInstance(){
+        if(!(self::$_instance instanceof C)){
+            self::$_instance = new C();
+        }
+        return self::$_instance;
+    }
+
+    public function show(){
+        echo " C类单例类调用show方法成功<br/>";
+    }
+
+}
+
+/**
+ * 使用unshiftObj，pushObj方法决定类执行的先后顺序，实现类的核心加载
+ */
+Core::unshiftObj(['A','init',[],Core::_STATIC]);
+Core::unshiftObj(['B','add',['思琼哈哈哈',33],Core::_OBJECT]);
+Core::pushObj(["C","show",[],Core::_SIGNLE]);
+while (Core::listen()){
+    Core::doObj();
+}
+
+
+```
 
 
 
