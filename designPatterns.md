@@ -581,13 +581,13 @@ $obj->skillBag();
 
 ## 队列消息模式
 ---
-### 在php框架中，启动框架时会去加载php框架生命周期中必须要运行的核心类，我们可以使用if来判断是否加载对应的类的先后，但是这种方式比较不容易维护。在这里我们来实现一个核心加载器，当框架运行的时候来驱动框架整个生命周期的核心类的调用。我们下面介绍使用php的队列消息模式的思想来实现PHP框架核心类加载。
+#### 在php框架中，启动框架时会去加载php框架生命周期中必须要运行的核心类，我们可以使用if来判断是否加载对应的类的先后，但是这种方式比较不容易维护。在这里我们来实现一个核心加载器，当框架运行的时候来驱动框架整个生命周期的核心类的调用。我们下面介绍使用php的队列消息模式的思想来实现PHP框架核心类加载。
 ```
 <?php
 /*
  * @desc 核心加载器
  */
-class Core{
+class Loader{
     //需要加载对象数组
     private static $_objlist=[];
     //标示的调用方法为静态
@@ -695,14 +695,19 @@ class C{
 /**
  * 使用unshiftObj，pushObj方法决定类执行的先后顺序，实现类的核心加载
  */
-Core::unshiftObj(['A','init',[],Core::_STATIC]);
-Core::unshiftObj(['B','add',['思琼哈哈哈',33],Core::_OBJECT]);
-Core::pushObj(["C","show",[],Core::_SIGNLE]);
-while (Core::listen()){
-    Core::doObj();
+Loader::unshiftObj(['A','init',[],Loader::_STATIC]);
+Loader::unshiftObj(['B','add',['思琼哈哈哈',33],Loader::_OBJECT]);
+Loader::pushObj(["C","show",[],Loader::_SIGNLE]);
+while (Loader::listen()){
+    Loader::doObj();
 }
 
-
+```
+#### 运行结果如下
+```
+B类通过对象方法调用add方法成功,参数name:思琼哈哈哈 , age:33
+A类型调用静态方法init成功
+C类单例类调用show方法成功
 ```
 
 
