@@ -26,7 +26,7 @@
   * [php自动加载](high-php.md#php自动加载)
   * [php反射](high-php.md#php反射)
   * PHP中间件
-  * [php接口数据安全解决方案一](high-php.md#php接口数据安全解决方案一）
+  * [php接口数据安全解决方案一](high-php.md#php接口数据安全解决方案一)
   * 接口安全-JWT实现（二）
   * php7新特性
 * [swoole](https://github.com/lisiqiong/swoole-demo)
