@@ -4,7 +4,7 @@ php高级知识点
 * php依赖注入
 * PHP中间件
 * [php接口数据安全解决方案一](#php接口数据安全解决方案一)
-* 接口安全-JWT实现（二）
+* [php接口数据安全解决方案二](#php接口数据安全解决方案二)
 * php7新特性
 ## php反射
 ---
@@ -778,5 +778,318 @@ $user->getUser();
 ***
 上面完整的实现了整个api的安全过程，包括接口token生成时效性合法性验证，接口数据传输防篡改，接口防重放实现。仅仅靠这还不能够最大限制保证接口的安全。条件满足的情况下可以使用https协议从数据底层来提高安全性，另外本实现过程token是使用redis存储，下一篇文章我们将使用第三方开发的库实现JWT的规范操作，来替代redis的使用。
 
+## php接口数据安全解决方案二
+***
+#### jwt说明
+JWT是什么
+JWT是json web token缩写。它将用户信息加密到token里，服务器不保存任何用户信息。服务器通过使用保存的密钥验证token的正确性，只要正确即通过验证。基于token的身份验证可以替代传统的cookie+session身份验证方法。
+它定义了一种用于简洁，自包含的用于通信双方之间以 JSON 对象的形式安全传递信息的方法。JWT 可以使用 HMAC 算法或者是 RSA 的公钥密钥对进行签名。
+
+本实例是使用github开源项目来实现，项目地址为
+[点击查看源jwt项目代码](https://github.com/lcobucci/jwt/tree/3.2)
+
+怎么使用jwt项目？
+- 1.阅读GitHub上项目文档说明
+- 2.composer安装jwt（composer require lcobucci/jwt）
+
+#### 实例演示token签名并创建token
+```
+<?php
+include "./vendor/autoload.php";
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+
+$time = time();
+$token = (new Builder())->setHeader('alg','HS256')
+//配置发行者
+->setIssuer("jwtTest")
+//配置Audience
+->setAudience("php")
+//配置令牌发出的时间（签发时间）
+->setIssuedAt($time)
+//配置令牌该时间之前不接收处理该Token
+->setNotBefore($time+60)
+//配置令牌到期的时间
+->setExpiration($time + 7200)
+//配置一个自定义uid声明
+->set('uid',20)
+//使用sha256进行签名,密钥为123456
+->sign(new Sha256(),"123456")
+//获取token
+->getToken();
+// echo $token;
+//获取设置所有header头
+$headers = $token->getHeaders();    
+//获取所有的配置
+$claims = $token->getClaims();
+
+$alg = $token->getHeader('alg');
+$iss = $token->getClaim('iss');
+$aud = $token->getClaim('aud');
+$iat = $token->getClaim('iat');
+$exp = $token->getClaim('exp');
+$nbf = $token->getClaim('nbf');
+$uid = $token->getClaim('uid');
+
+echo "=====下面是设置的header头信息======<br/>";
+echo "当前token的alg盐值为{$alg}<br/>";
+
+echo "=====下面是所有配置信息<br/>";
+echo "当前token的发行者是：{$iss}<br/>";
+echo "当前token的Audience是：{$aud}<br/>";
+echo "当前token的令牌发出时间是：{$iat}<br/>";
+echo "当前token不接收处理的时间为:{$nbf}<br/>";
+echo "当前token的到期时间：{$exp}<br/>";
+echo "当前token的uid是：{$uid}<br/>";
+echo "当前token字符串为:{$token}";
+```
+结果展示:
+```
+=====下面是设置的header头信息======
+当前token的alg盐值为HS256
+=====下面是所有配置信息
+当前token的发行者是：jwtTest
+当前token的Audience是：php
+当前token的令牌发出时间是：1563246935
+当前token不接收处理的时间为:1563246995
+当前token的到期时间：1563254135
+当前token的uid是：20
+当前token字符串为:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqd3RUZXN0IiwiYXVkIjoicGhwIiwiaWF0IjoxNTYzMjQ2OTM1LCJuYmYiOjE1NjMyNDY5OTUsImV4cCI6MTU2MzI1NDEzNSwidWlkIjoyMH0.O8tscKPweCvSaXkOVbmhtEcsJ7BWRxRn9s_xXFstgsE
+```
+#### 解析token并校验token合法性
+```
+<?php
+include "./vendor/autoload.php";
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\ValidationData;
+
+//解析token
+$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqd3RUZXN0IiwiYXVkIjoicGhwIiwiaWF0IjoxNTYzMjQ2Mjc4LCJuYmYiOjE1NjMyNDYzMzgsImV4cCI6MTU2MzI1MzQ3OCwidWlkIjoyMH0.1XSZW6aWrHplAlMPMpc1K5gKdpWYE7AMa6T7qhBTF30';
+
+//解析后的token对象
+$decodeToken = (new Parser())->parse((string) $token);
+$uid = $decodeToken->getClaim('uid');
+$exp = $decodeToken->getClaim('exp');
+$time = time();
+echo "当前时间为：{$time}<br/>";
+$result = $decodeToken->verify(new Sha256(),"123456");
+
+//对token进行发行者和audience的校验
+$data = new ValidationData();
+$data->setAudience("php");
+$data->setIssuer("jwtTest");
+$resultVali =  $decodeToken->validate($data);
+// print_r($resultVali);
+
+//判断token签名和校验发行者是否合法
+if($result && $resultVali){
+    //如果设置的token有效时间大于当前时间则表示token过期了
+    if($time>$exp){
+        echo "该token已经过期了<br/>";    
+    }else{
+        echo "该token是合法的uid为:{$uid}，过期时间为{$exp}<br/>";
+    }
+}else{
+    echo "该token不合法签名错误或发行者不合法<br/>";
+}
+```
+运行后结果为：
+```
+当前时间为：1563248373
+该token是合法的uid为:20，过期时间为1563253478
+```
+#### 类库封装管理jwt实例
+```
+<?php
+include "./vendor/autoload.php";
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Hmac\Sha256;
+use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Claim\GreaterOrEqualsTo;
+use Lcobucci\JWT\Token;
+
+/**
+ * Class JwtAuth
+ * @package App\Library
+ * @desc jwt接口鉴权类处理
+ */
+class JwtAuth{
+    //jwt token
+    private $token;
+    /**
+     * @var 用户传递的decode token
+     */
+    private $decodeToken;
+    private static $_instance;
+    private $iss = "jwtTest";
+    private $aud = "php";
+    private $uid;
+    private $serect = "123456";
+    private $exp;//token失效时间
+    const EXP = 60;//token有效时间一个月
+
+    /**
+     * JwtAuth constructor.
+     * 私有化construct方法
+     */
+    private function __construct()
+    {
+    }
+
+    /**
+     * 私有化clone方法
+     */
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
+    /**
+     *  获取jwtauth类实例化对象
+     */
+    public static function getInstance(){
+        if(!(self::$_instance instanceof JwtAuth) ){
+            self::$_instance = new JwtAuth();
+        }
+        return self::$_instance;
+    }
+
+    /**
+     * 获取token
+     * @return string
+     */
+    public function getToken(){
+        return (string)$this->token;
+    }
+
+    /**
+     * 设置token
+     * @param $token
+     * @return $this
+     */
+    public function setToken($token){
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * 设置uid
+     * @param $uid
+     * @return $this
+     */
+    public function setUid($uid){
+        $this->uid = $uid;
+        return $this;
+    }
+
+    /**
+     * 获取uid
+     * @return mixed
+     */
+    public function getUid(){
+        return $this->uid;
+    }
+
+     /**
+     * 获取exp
+     * @return mixed
+     */
+    public function getExp(){
+        return $this->exp;
+    }
+
+    /**
+     * 编码jwt token
+     */
+    public function encode(){
+        $time = time();
+        $this->token = (new Builder())->setHeader('alg','HS256')
+            ->setIssuer($this->iss)
+            ->setAudience($this->aud)
+            ->setIssuedAt($time)
+            ->setExpiration($time + self::EXP)
+            ->set('uid',$this->uid)
+            ->sign(new Sha256(),$this->serect)
+            ->getToken();
+        return $this;
+    }
+
+    /**
+     * 解析传递的token
+     * @return 用户传递的decode
+     */
+    public function decode(){
+        if(!$this->decodeToken){
+            // Parses from a string
+            $this->decodeToken = (new Parser())->parse((string) $this->token);
+            $this->uid = $this->decodeToken->getClaim('uid');
+            $this->exp = $this->decodeToken->getClaim('exp');
+//            error_log('exp:'.$this->decodeToken->getClaim('exp'));
+//            error_log('uid:'.$this->decodeToken->getClaim('uid'));
+        }
+        return $this->decodeToken;
+    }
+
+    /**
+     * verify校验token signature串第三个字符串
+     * @return mixed
+     */
+    public function verify(){
+        $result = $this->decode()->verify(new Sha256(),$this->serect);
+        return $result;
+    }
+
+    /**
+     * 校验传递的token是否有效,校验前两个字符串
+     * @return mixed
+     */
+    public function validate(){
+        $data = new ValidationData();
+        $data->setAudience($this->aud);
+        $data->setIssuer($this->iss);
+        return $this->decode()->validate($data);
+    }
+
+}
+
+/*
+@desc 模拟登录返回token
+ */
+$jwtAuth = JwtAuth::getInstance();
+$uid = 20;
+$token = $jwtAuth->setUid($uid)->encode()->getToken();
+echo "当前已经为您生成最新token:{$token}<br/>";
+
+
+/*
+1.解析token
+2.校验token签名是否合法
+3.验证token发行者等信息是否合法
+4.校验token是否过期
+ */
+$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqd3RUZXN0IiwiYXVkIjoicGhwIiwiaWF0IjoxNTYzMjY4NjExLCJleHAiOjE1NjMyNjg2NzEsInVpZCI6MjB9.PeEA3xTE2lKl4YCYQ2cjHSNYsrJ24HRnW1-yKM-LgHc';
+$jwtAuth2 = JwtAuth::getInstance();
+$jwtAuth2->setToken($token);
+if($jwtAuth2->validate() && $jwtAuth2->verify()){
+    //初始化用户id
+    $uid = $jwtAuth2->getUid();
+    $exp = $jwtAuth2->getExp();
+    echo "token合法,您当前的uid为:{$uid},当前时间戳为:".time()."token有效时间为:{$exp}<br/>";
+}else{
+    echo "token校验失败，token签名不合法，或token发行者信息不合法<br/>";
+}
+```
+演示结果为
+```
+当前已经为您生成最新token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqd3RUZXN0IiwiYXVkIjoicGhwIiwiaWF0IjoxNTYzMjY4NjIzLCJleHAiOjE1NjMyNjg2ODMsInVpZCI6MjB9.BrsVElhVkTIq5xH3-JpvqvawNhDALb98VYZGbMTzWV8
+token合法,您当前的uid为:20,当前时间戳为:1563268623token有效时间为:1563268671
+```
+```
+当前已经为您生成最新token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqd3RUZXN0IiwiYXVkIjoicGhwIiwiaWF0IjoxNTYzMjY4NzA1LCJleHAiOjE1NjMyNjg3NjUsInVpZCI6MjB9.juTM5iG8LNDid8Sp4jOjtHeTitaIB2WxZeW3GjnQrB0
+token校验失败，token签名不合法，或token发行者信息不合法
+```
 
 
