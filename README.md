@@ -30,14 +30,6 @@
   * [php接口数据安全解决方案二](high-php.md#php接口数据安全解决方案二)
   * php7新特性
 * [swoole](https://github.com/lisiqiong/swoole-demo)
-  * [tcp]
-  * [udp]
-  * [websocket]
-  * 协程corutine
-  * [process]
-  * memory
-    * table
-  * timer
 * [常用算法](arithmetic.md)
   + 排序
     + [冒泡排序](arithmetic.md#冒泡排序)
@@ -63,40 +55,15 @@
   * telnet实现post请求
   * telnet实现文件上传
 - mysql
-  - 基础知识    
-    - 普通查询语句
-    - join
-    - 子查询
-    - union
-    - union all
-    - [触发器](mysql.md#触发器)
-    - 存储过程
-  - 数据库优化
-    - 应用系统sql优化
-      - 分表策略
-      - 分库策略
-      - 索引
-	  - 普通索引，联合索引
-	  - 如何选择字段创建索引
-	  - 索引失效原因 
-      - 查询缓存
-    - mysql服务器优化
-      - 开启慢查询定位问题
-      - mysql连接数
-    - 操作系统与硬件优化
-    - 系统架构整体优化
-      - 负载均衡
-      - 缓存
-      - 分布式优化
-  - 数据管理与维护
-    - 数据备份
-	- mysqldump备份数据库
-	- mysldump备份数据表
-	- mysqldump备份数据表结构
-    - 数据恢复
-    - mysql日志
-    - mysql监控
-    - mysql常用工具
+  + mysql查询缓存
+  + 存储引擎区别
+  + 索引优化
+  + mysql分区
+  + mysql分表
+  + 负载均衡
+  + 一主多重
+  + 分布式部署
+  + 数据库备份和维护
 - [nginx](nginx.md)
   - nginx简单介绍以及安装
   - [nginx信号量](nginx.md#nginx信号量)
@@ -127,12 +94,12 @@
   * shell脚本实现日志定时备份
   * shell脚本实现数据库备份
 - 高并发大流量web解决思路及方案
- * 什么是高并发大流量web
- * web资源防盗链
- * 减少http请求
- * web服务器负载均衡、请求分发
- * 浏览器缓存和压缩优化
- * CDN加速
- * 建立独立的图片服务器
- * mysql优化
- * 动态页面静态化
+   - 什么是高并发大流量web
+   - web资源防盗链
+   - 减少http请求
+   - web服务器负载均衡、请求分发
+   - 浏览器缓存和压缩优化
+   - CDN加速
+   - 建立独立的图片服务器
+   - mysql优化
+   - 动态页面静态化
