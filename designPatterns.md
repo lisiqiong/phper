@@ -25,6 +25,8 @@
 + [责任链模式](#责任链模式)
 + [对象映射模式](#对象映射模式)
 + [队列消息模式](#队列消息模式)
++ [迭代器模式](#迭代器模式)
++ [注册树模式](#注册树模式)
 
 ## 单例模式
 ---
@@ -710,10 +712,178 @@ A类型调用静态方法init成功
 C类单例类调用show方法成功
 ```
 
+## 迭代器模式
+说到迭代器模式我们不得不说foreach，迭代器就是遍历的意思，在php中对对象有两种遍历方式：
+- 1.普通遍历只能够遍历public属性
+- 2.类实现了迭代器类的遍历
+在php使用foreach遍历对象的时候，会检查这个实例没有实现Iterator接口，如果实现了就会内置使用迭代器的方式遍历对象
+***
+### 迭代器的流程图
+![avatar](./images/iterator.png)
+### php迭代器方法执行流程图
+![avatar](./images/iterator2.png)
+```
+class ArrayIterator implements \Iterator{
 
+    private $info = ['a','b','c','d'];
+    private $index;
 
+    //第一步初始化遍历指针
+    public function rewind()
+    {
+        $this->index = 0;
+    }
 
+    //第二步判断当前元素是否合法
+    public function valid()
+    {
+        return $this->index<count($this->info);
+    }
 
+    //第三步获取当前元素值
+    public function current()
+    {
+        return $this->info[$this->index];
+    }
+
+    //第四步获取当前元素键
+    public function key(){
+        return $this->index;
+    }
+
+    //第五步指针下移
+    public function next()
+    {
+        $this->index++;
+    }
+
+}
+//使用迭代器遍历对象属性
+$arrayIter = new ArrayIterator();
+foreach ($arrayIter as $key){
+    var_dump($key);
+}
+//结果会将变量数组遍历出来
+```
+
+## 注册树模式
+### 什么是注册树模式
+注册树模式当然也叫注册器模式，注册器模式是将对象实例注册到一颗全局的对象树上，需要的时候从对象树上采摘的模式设计方法
+### 为什么要采用注册树模式
+单例模式解决的是如何在整个项目中创建唯一对象实例的问题，工厂模式解决的是如何不通过new建立实例对象的方法。注册树模式解决的是不管你是通过单例模式还是工厂模式还是二者结合生成的对象，都统统的“插到”注册树上。在使用对象的时候直接从树上取对象即可，这和我们使用全局变量一样方便实用。
+### 注册树类
+```
+<?php
+/**
+ * @desc 注册树模式
+ */
+class Register{
+    //存储对象到树上
+    protected static $objects;
+
+    /**
+     * @param $alias
+     * @param $object
+     */
+    public static function set($alias,$object){
+        self::$objects[$alias] = $object;
+    }
+
+    /**
+     * @desc 销毁对象实例
+     * @param $alias
+     */
+    public static function _unset($alias){
+        unset(self::$objects[$alias]);
+    }
+
+    /**
+     * @desc 获取指定的对象实例
+     * @param $alias
+     * @return mixed
+     */
+    public static function get($alias){
+        return self::$objects[$alias];
+    }
+}
+```
+
+### 操作mysqli的类
+```
+<?php
+class Mysqli{
+    protected $conn;
+    /**
+     * @desc 连接数据库
+     * @param $host
+     * @param $user
+     * @param $passwd
+     * @param $dbname
+     */
+    public function conn($host,$user,$passwd,$dbname){
+        $conn = mysqli_connect($host,$user,$passwd,$dbname);
+        $this->conn = $conn;
+    }
+
+    /**
+     * @desc 获取数据库连接对象
+     * @param $host
+     * @param $user
+     * @param $passwd
+     * @param $dbname
+     */
+    static public function getConn($host,$user,$passwd,$dbname){
+        $conn = mysqli_connect($host,$user,$passwd,$dbname);
+        return $conn;
+    }
+
+    public function insert($sql)
+    {
+        // TODO: Implement insert() method.
+    }
+
+    public function update($sql)
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete($sql)
+    {
+        // TODO: Implement delete() method.
+    }
+
+    /**
+     * @desc 执行数据库
+     * @param $sql
+     */
+    public function query($sql){
+        return mysqli_query($this->conn,$sql);
+    }
+
+    /**
+     * @desc 关闭数据库
+     */
+    public function close(){
+        mysqli_close($this->conn);
+    }
+
+}
+```
+
+### 运行注册树
+```
+<?php
+include "Register.php";
+include "Mysqli.php";
+//通过注册树的方式获取变量
+Register::set('db',new Mysqli());
+$db = Register::get('db');
+$db->conn("localhost","root","","test");
+$sql = "select * from admin";
+$res = $db->query($sql);
+print_r($res);
+//运行结果会打印出admin表的数据
+```
 
 
 
