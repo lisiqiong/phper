@@ -21,6 +21,8 @@
    - [责任链模式](designPatterns.md#责任链模式)
    - [对象映射模式](designPatterns.md#对象映射模式)
    - [队列消息模式](designPatterns.md#队列消息模式)
+   - [迭代器模式](designPatterns.md#迭代器模式)
+   - [注册树模式](designPatterns.md#注册树模式)
 - php高级
   * php缓冲区
   * [php自动加载](high-php.md#php自动加载)
@@ -69,12 +71,10 @@
   - [nginx信号量](nginx.md#nginx信号量)
   - [location](nginx.md#location)
   - [rewrite重写](nginx.md#rewrite重写)
-  - nginx结合php
   - nginx防盗链
   - expires缓存提升网站负载
   - [nginx反向代理](nginx.md#nginx反向代理)
   - [nginx实现负载均衡](nginx.md#nginx实现负载均衡)
-  - nginx服务器集群搭建
 - redis
   - 用户积分排行榜
   - 事务
@@ -93,13 +93,13 @@
   * shell脚本实现服务监控
   * shell脚本实现日志定时备份
   * shell脚本实现数据库备份
-- 高并发大流量web解决思路及方案
-   - 什么是高并发大流量web
-   - web资源防盗链
-   - 减少http请求
-   - web服务器负载均衡、请求分发
-   - 浏览器缓存和压缩优化
-   - CDN加速
-   - 建立独立的图片服务器
-   - mysql优化
-   - 动态页面静态化
+- [高并发大流量web解决思路及方案](senior.md)
+   + [高并发web架构相关概念](senior.md#高并发web架构相关概念)
+   + [高并发大流量web整体解决思路](senior.md#高并发大流量web整体解决思路)
+   + [web服务器负载均衡](senior.md#web服务器负载均衡)
+   + [cdn加速](senior.md#cdn加速)
+   + [建立独立的图片服务器](senior.md#建立独立的图片服务器)
+   + [动态页面静态化](senior.md#动态页面静态化)
+   + [php并发编程实战](senior.md#php并发编程实战)
+   + [mysql数据层的优化](senior.md#mysql数据层的优化)
+   + [mysql缓存层的优化](senior.md#mysql缓存层的优化)
