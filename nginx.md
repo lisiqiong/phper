@@ -2,6 +2,9 @@
 - [nginx信号量](#nginx信号量)
 - [location](#location)
 - [rewrite重写](#rewrite重写)
+- [nginx防盗链](#nginx防盗链)
+- [nginx之gzip压缩提升网站速度](#nginx之gzip压缩提升网站速度)
+- [expires缓存提升网站负载](#expires缓存提升网站负载)
 - [nginx反向代理](#nginx反向代理)
 - [nginx实现负载均衡](#nginx实现负载均衡)
 
@@ -219,6 +222,159 @@ if(!-e $document_root$fastcgi_script_name){
 
 ```
 
+## nginx防盗链
+***
+- [什么是防盗链](#什么是防盗链)
+- [nginx防盗链](#nginx防盗链)
+- [实例演示](#实例演示)
+
+### 什么是防盗链
+
+防盗链简而言之就是防止第三方或者未进允许的域名访问自己的静态资源的一种限制技术。比如A网站有许多自己独立的图片素材不想让其它网站通过直接调用图片路径的方式访问图片，于是采用防盗链方式来防止。
+
+### nginx防盗链
+
+防盗链基于客户端携带的referer实现，referer是记录打开一个页面之前记录是从哪个页面跳转过来的标记信息，如果别人只链接了自己网站的图片或某个单独的资源，而不是打开整个页面，这就是盗链，referer就是之前的那个网站域名，正常的referer信息有以下几种
+
+#### nginx防盗链的代码定义
+- 定义合规的引用
+```
+valid_referers none | blocked | server_names | string ...;
+```
+
+- 拒绝不合规的引用：
+```
+if  ($invalid_referer) {
+    rewrite ^/.*$ http://www.b.org/403.html 
+}
+```
+
+#### 参数说明：
+
+- none:请求报文没有referer首部，比如用户直接在浏览器输入域名访问往web网站，就是没有referer信息 
+- blocked:请求报文由referer信息，但无又有效值为空 
+- server_names:referer首部中包含本主机及nginx监听的server_name 
+- invalid_referer:不合规的feferer引用
+
+### 实例演示
+|图片源地址|调用图片地址|
+|:----    |:---|
+|dev.api.dd.com |localhost  |
+
+#### 测试页面index.html
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>演示nginx防盗链</title>
+</head>
+<body>
+<img src="http://dev.api.dd.com/timg.jpeg" style="width: 100px;height: 100px;" />
+</body>
+</html>
+```
+
+#### 正常配置nginx不做防盗链处理
+```
+server {
+    listen 80;
+    server_name dev.api.dd.com;
+    root /Users/lidong/Desktop/wwwroot/dd_api/public;
+    index index.php index.html index.htm;
+    access_log /Users/lidong/wwwlogs/dev.api.dd.com_access.log; 
+    error_log  /Users/lidong/wwwlogs/dev.api.dd.com_error.log; 
+    location ~ [^/]\.php(/|$) {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
+    }
+
+    try_files $uri $uri/ @rewrite;
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
+    }
+
+}`
+```
+#### 运行http://localhost/index.html结果
+![avatar](./images/ok.png)
+
+#### 配置限定的资源文件如果被第三方调用直接返回403
+```
+server {
+    listen 80;
+    server_name dev.api.dd.com;
+    root /Users/lidong/Desktop/wwwroot/dd_api/public;
+    index index.php index.html index.htm;
+    access_log /Users/lidong/wwwlogs/dev.api.dd.com_access.log; 
+    error_log  /Users/lidong/wwwlogs/dev.api.dd.com_error.log; 
+    location ~ [^/]\.php(/|$) {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
+        valid_referers none blocked dev.api.dd.com;
+        if ($invalid_referer)
+        {
+            return 403;
+        }
+    }
+
+    try_files $uri $uri/ @rewrite;
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
+    }
+
+}
+```
+#### 运行http://localhost/index.html结果
+![avatar](./images/403.png)
+
+#### 配置限定的资源文件如果被第三方调用直接返回一张404的图片
+```
+server {
+    listen 80;
+    server_name dev.api.dd.com;
+    root /Users/lidong/Desktop/wwwroot/dd_api/public;
+    index index.php index.html index.htm;
+    access_log /Users/lidong/wwwlogs/dev.api.dd.com_access.log; 
+    error_log  /Users/lidong/wwwlogs/dev.api.dd.com_error.log; 
+    location ~ [^/]\.php(/|$) {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+        include        fastcgi_params;
+    }
+
+    location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$ {
+        valid_referers none blocked dev.api.dd.com;
+        if ($invalid_referer)
+        {
+            rewrite ^/ http://dev.api.dd.com/404.jpeg;
+        }
+    }
+
+    try_files $uri $uri/ @rewrite;
+    location @rewrite {
+        rewrite ^/(.*)$ /index.php?_url=/$1;
+    }
+
+}
+```
+#### 运行http://localhost/index.html结果
+调用的图片显示302
+![avatar](./images/302.png)
+用一张源站的404替换显示
+![avatar](./images/404.png)
 
 ## nginx反向代理
 跨域：浏览器从一个域名的网页去请求另一个域名的资源时，域名、端口、协议任一不同，都是跨域 。
@@ -367,4 +523,118 @@ server {
 - 1.这样的架构会出现session无法共享的问题？
 - 2.如果其中有一台后端服务器宕机了怎么处理？
 这些问题后面会有文章进行说明
+
+
+## nginx之gzip压缩提升网站速度
+***
+### 为啥使用gzip压缩
+开启nginx的gzip压缩，网页中的js，css等静态资源的大小会大大的减少从而节约大量的带宽，提高传输效率，给用户快的体验。
+
+### nginx实现gzip
+nginx实现资源压缩的原理是通过默认集成的ngx_http_gzip_module模块拦截请求，并对需要做gzip的类型做gzip，使用非常简单直接开启，设置选项即可。。
+
+gzip生效后的请求头和响应头
+
+```
+Request Headers:
+Accept-Encoding:gzip,deflate,sdch
+
+Response Headers:
+Content-Encoding:gzip
+Cache-Control:max-age240
+```
+
+gzip的处理过程
+
+从http协议的角度看，请求头声明acceopt-encoding:gzip deflate sdch（是指压缩算法，其中sdch是google自己家推的一种压缩方式）
+服务器-〉回应-〉把内容用gzip压缩-〉发送给浏览器-》浏览器解码gzip->接收gzip压缩内容
+
+#### gzip的常用配置参数：
+- gzip on|off&emsp;&emsp;是否开启gzip
+- gzip_buffers&emsp;&emsp;4k&emsp;&emsp;缓冲（压缩在内存中缓冲几块？每块多大？）
+- gzip_comp_level [1-9] &emsp;&emsp;推荐6&emsp;&emsp;压缩级别，级别越高压缩的最小，同时越浪费cpu资源
+- gzip_disable &emsp;&emsp;正则匹配UA是什么样的URi不进行gzip
+- gzip_min_length&emsp;&emsp;200开始压缩的最小长度，小于这个长度nginx不对其进行压缩
+- gzip_http_version&emsp;&emsp;1.0|1.1开始压缩的http协议版本(默认1.1)
+- gzip_proxied&emsp;&emsp;设置请求者代理服务器，该如何缓存内容
+- gzip_types&emsp; text/plain&emsp;&emsp;application/xml&emsp;&emsp;对哪些类型的文件用压缩如txt,xml,html,css
+- gzip_vary&emsp;&emsp;off&emsp;是否传输gzip压缩标志
+
+#### nginx配置gzip
+
+静态页面index.html
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>演示nginx做gzip压缩</title>
+    <script src="./jquery.js" ></script>
+</head>
+<body>
+<img src="./nginx_img.jpeg" style="width: 100px;height: 100px;" />
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+<h1>nginx实现gzip压缩，减少带宽的占用,同时提升网站速度</h1>
+</body>
+</html>
+```
+
+nginx的配置
+
+```
+server{
+        listen 80;
+        server_name localhost 192.168.0.96;
+
+        gzip on;
+        gzip_buffers 32 4k;
+        gzip_comp_level 6;
+        gzip_min_length 200;
+        gzip_types application/javascript application/x-javascript text/javascript text/xml text/css;
+        gzip_vary off;
+
+        root /Users/lidong/Desktop/wwwroot/test;
+
+        index  index.php index.html index.htm;
+
+        access_log /Users/lidong/wwwlogs/access.log;
+        error_log /Users/lidong/wwwlogs/error.log;
+
+        location ~ [^/]\.php(/|$) {
+                fastcgi_pass   127.0.0.1:9000;
+                fastcgi_index  index.php;
+                fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+                include        fastcgi_params;
+        }
+
+}
+```
+
+为使用gzip前的页面请求：
+![avatar](./images/nginx_gzip1.png)
+
+开启了gzip页面的请求：
+![avatar](./images/nginx_gzip2.png)
+![avatar](./images/nginx_gzip2.2.png)
+
+#### 注意
+- 图片，mp3一般不需要压缩，因为压缩率比较小
+- 一般压缩text,css,js,xml格式的文件
+- 比较小的文件不需要压缩，有可能还会比源文件更大
+- 二进制文件不需要压缩
+
+## expires缓存提升网站负载
+***
+
+
+
+
+
+
+
 

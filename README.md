@@ -67,12 +67,12 @@
   + 负载均衡
   + 数据库备份和维护
 - [nginx](nginx.md)
-  - nginx简单介绍以及安装
   - [nginx信号量](nginx.md#nginx信号量)
   - [location](nginx.md#location)
   - [rewrite重写](nginx.md#rewrite重写)
-  - nginx防盗链
-  - expires缓存提升网站负载
+  - [nginx防盗链](nginx.md#nginx防盗链)
+  - [nginx之gzip压缩提升网站速度](nginx.md#nginx之gzip压缩提升网站速度)
+  - [expires缓存提升网站负载](nginx.md#expires缓存提升网站负载)
   - [nginx反向代理](nginx.md#nginx反向代理)
   - [nginx实现负载均衡](nginx.md#nginx实现负载均衡)
 - redis
